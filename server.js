@@ -15,15 +15,17 @@ app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 app.use(express.static("public"));
-
+app.engine("handlebars", exphbs({
+  defaultLayout: "main"
+}));
 app.set("view engine", "handlebars");
 app.set('views', __dirname + '/views');
 
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI,  { useNewUrlParser: true });
 
-require("./routes/api_routes.js")(app);
-require("./routes/ejs_routes.js")(app);
+require("./routes/api-routes.js")(app);
+require("./routes/ejs-routes.js")(app);
 
 
 app.listen(PORT, function() {

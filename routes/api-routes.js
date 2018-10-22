@@ -1,7 +1,11 @@
 const db = require("../models");
-
+var app
 var axios = require("axios");
 var cheerio = require("cheerio");
+
+module.exports = function (app){
+
+
 
 app.get("/scrape", function(req, res) {
     // First, we grab the body of the html with axios
@@ -88,4 +92,4 @@ app.get("/scrape", function(req, res) {
         res.json(err);
       });
   });
-  
+}
