@@ -13,12 +13,17 @@
 </head>
 
 <body>
-	<div class="topnav">
-		<img src="./images/pug.png" alt="Article Scraper" id="article">
-		<p id="title">Article Scraper</p>
-		<a class="active" href="#">About</a>
-	</div>
 
+  <nav>
+    <div class="nav-wrapper">
+      <a href="/" class="brand-logo">BBC Web Scraper</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="/">Home</a></li>
+        <li><a href="/saved">Articles</a></li>
+        <li><a class="waves-effect waves-light btn-large" id="scraper-button" action="/scrape">Scrape Articles</a></li>
+      </ul>
+    </div>
+  </nav>
 	{{{ body }}}
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="/assets/js/script.js"></script>

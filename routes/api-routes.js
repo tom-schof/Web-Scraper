@@ -1,5 +1,4 @@
 const db = require("../models");
-var app
 var axios = require("axios");
 var cheerio = require("cheerio");
 
@@ -8,29 +7,30 @@ module.exports = function (app){
 
 
 app.get("/scrape", function(req, res) {
-    // First, we grab the body of the html with axios
-    axios.get("http://www.echojs.com/").then(function(response) {
-      // Then, we load that into cheerio and save it to $ for a shorthand selector
+    axios.get("https://www.bbc.com/news").then(function(response) {
       var $ = cheerio.load(response.data);
   
       // Now, we grab every h2 within an article tag, and do the following:
-      $("article h2").each(function(i, element) {
+      $("gs-c-promo-heading").each(function(i, element) {
         // Save an empty result object
         var result = {};
   
         // Add the text and href of every link, and save them as properties of the result object
         result.title = $(this)
-          .children("a")
+          .children("h3")
           .text();
         result.link = $(this)
-          .children("a")
           .attr("href");
+
+
+         console.log(result);
   
         // Create a new Article using the `result` object built from scraping
         db.Article.create(result)
           .then(function(dbArticle) {
             // View the added result in the console
-            console.log(dbArticle);
+            console.log("line 33: " + dbArticle);
+            res.json(dbArticle);
           })
           .catch(function(err) {
             // If an error occurred, send it to the client
@@ -39,12 +39,12 @@ app.get("/scrape", function(req, res) {
       });
   
       // If we were able to successfully scrape and save an Article, send a message to the client
-      res.send("Scrape Complete");
+      res.send("scrape complete");
     });
   });
   
   // Route for getting all Articles from the db
-  app.get("/articles", function(req, res) {
+  app.get("/api/articles", function(req, res) {
     // Grab every document in the Articles collection
     db.Article.find({})
       .then(function(dbArticle) {
@@ -58,7 +58,7 @@ app.get("/scrape", function(req, res) {
   });
   
   // Route for grabbing a specific Article by id, populate it with it's note
-  app.get("/articles/:id", function(req, res) {
+  app.get("/api/articles/:id", function(req, res) {
     // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
     db.Article.findOne({ _id: req.params.id })
       // ..and populate all of the notes associated with it
@@ -74,7 +74,7 @@ app.get("/scrape", function(req, res) {
   });
   
   // Route for saving/updating an Article's associated Note
-  app.post("/articles/:id", function(req, res) {
+  app.post("/api/articles/:id", function(req, res) {
     // Create a new note and pass the req.body to the entry
     db.Note.create(req.body)
       .then(function(dbNote) {
